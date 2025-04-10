@@ -1,0 +1,44 @@
+# Example configuration for mandible FEA pipeline
+
+# Global configuration
+global:
+  output_base_dir: "./output"
+  num_workers: 8  # Number of parallel workers
+  
+# Material models and calibration
+materials:
+  calibration:
+    hu_points: [-1000, 1200, 1800]
+    rho_points: [0.001, 2.2, 2.9]
+  models:
+    helgason:
+      a: 6850
+      b: 1.49
+    carter_hayes:
+      a: 3790
+      b: 1.56
+
+# Export settings
+export:
+  vtk: true
+  inp: true
+  dat: true
+  modulus_bins: 10
+
+# Cases to process
+cases:
+  - name: "patient_001"
+    dicom_dir: "/path/to/dicom/patient_001"
+    mask_path: "/path/to/masks/patient_001.nii"
+    material_model: "helgason"
+  - name: "patient_002"
+    dicom_dir: "/path/to/dicom/patient_002"
+    mask_path: "/path/to/masks/patient_002.nii"
+    material_model: "carter_hayes"
+
+# Parameter sweep configurations
+parameter_sweeps:
+  - base_case: "patient_001"
+    parameters:
+      material_model: ["helgason", "carter_hayes"]
+      modulus_bins: [5, 10, 20]
